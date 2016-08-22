@@ -17,8 +17,7 @@ dayToIndex = {"mo":0,
               "di":1, "tu":1,
               "mi":2, "we":2,
               "do":3, "th":3,
-              "fr":4
-              }
+              "fr":4}
 
 validDays = [0,1,2,3,4]
 
@@ -29,7 +28,7 @@ def pizza(bot, event, *args):
     mvotes = bot.memory.get_by_path(["pizzavotes"])  # grab all votes
     for user_id in mvotes:
         vote = mvotes[user_id]
-        votes = map(add, votes, vote)
+        votes = list(map(add, votes, vote))
 
     indices = [i for i, x in enumerate(votes) if x == max(votes)]
     days = list(map(lambda x:indexToDay[x], indices))
@@ -42,7 +41,7 @@ def dumpvotes(bot, event, *args):
     mvotes = bot.memory.get_by_path(["pizzavotes"])  # grab all votes
     for user_id in mvotes:
         vote = mvotes[user_id]
-        yield from bot.coro_send_message(event.conv, _("Vote for " + user_id + ": {}").format(",".join(map(str,vote))))
+        yield from bot.coro_send_message(event.conv, _("Vote for " + user_id + ": {}").format(vote))
 
 def initMemory(bot):
     if not bot.memory.exists(["pizzavotes"]):
