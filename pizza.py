@@ -40,7 +40,7 @@ def dumpvotes(bot, event, *args):
     mvotes = bot.memory.get_by_path(["pizzavotes"])  # grab all votes
     for user_id in mvotes:
         vote = mvotes[user_id]
-        yield from bot.coro_send_message(event.conv, _("Vote for " + user_id + ": {}").format(",".join(vote)))
+        yield from bot.coro_send_message(event.conv, _("Vote for " + user_id + ": {}").format(",".join(map(str,vote))))
 
 def initMemory(bot):
     if not bot.memory.exists(["pizzavotes"]):
@@ -71,9 +71,10 @@ def vote(bot, event, *args):
         bot.memory.save()
         yield from bot.coro_send_message(event.conv, _("Thank you for voting ({})").format(vote))
     except ValueError:
-        yield from bot.coro_send_message(event.conv, _("Error: Do you even syntax."))
+        yield from bot.coro_send_message(event.conv, _("Error: Do you even syntax?!"))
 
 
+days = [0,1,2,3,4]
 def voteForPizza(bot, inp):
     groups = inp.lower().split(",")
     days = map(lambda x:x.split("-"), groups)
@@ -81,13 +82,13 @@ def voteForPizza(bot, inp):
     vote = [0]*5
     for ri in ranges:
         r = list(ri)
-        if len(r) == 1:
+        if len(r) == 1 and r[0] in days:
             vote[r[0]] += 1
-        elif len(r) == 2:
+        elif len(r) == 2 and r[0] in days and r[1] in days and r[0] < r[1]:
             for d in range(r[0], r[1] + 1):
                 vote[d] += 1
         else:
-            raise ValueError("urgh")
+            raise ValueError("Do you even syntax?!")
     #Clean
     vote = list(map(lambda x:min(x, 1), vote))
     return vote
