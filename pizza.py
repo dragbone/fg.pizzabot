@@ -89,5 +89,5 @@ def voteForPizza(bot, inp):
         else:
             raise ValueError("urgh")
     #Clean
-    vote = map(lambda x:min(x, 1), vote)
+    vote = list(map(lambda x:min(x, 1), vote))
     return vote
