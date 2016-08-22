@@ -20,6 +20,8 @@ dayToIndex = {"mo":0,
               "fr":4
               }
 
+validDays = [0,1,2,3,4]
+
 def pizza(bot, event, *args):
     initMemory(bot)
 
@@ -73,8 +75,6 @@ def vote(bot, event, *args):
     except ValueError:
         yield from bot.coro_send_message(event.conv, _("Error: Do you even syntax?!"))
 
-
-days = [0,1,2,3,4]
 def voteForPizza(bot, inp):
     groups = inp.lower().split(",")
     days = map(lambda x:x.split("-"), groups)
@@ -82,9 +82,9 @@ def voteForPizza(bot, inp):
     vote = [0]*5
     for ri in ranges:
         r = list(ri)
-        if len(r) == 1 and r[0] in days:
+        if len(r) == 1 and r[0] in validDays:
             vote[r[0]] += 1
-        elif len(r) == 2 and r[0] in days and r[1] in days and r[0] < r[1]:
+        elif len(r) == 2 and r[0] in validDays and r[1] in validDays and r[0] < r[1]:
             for d in range(r[0], r[1] + 1):
                 vote[d] += 1
         else:
