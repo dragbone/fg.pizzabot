@@ -52,10 +52,7 @@ def resetvotes(bot, event, *args):
     initMemory(bot)
 
     counter = 0
-    votes = bot.memory.get_by_path(["pizzavotes"])  # grab all votes
-    for user_id in votes.items():
-        bot.memory.pop_by_path(["pizzavotes", user_id[0]])
-        counter += 1
+    bot.memory.set_by_path(["pizzavotes"], {})
     bot.memory.save()
     yield from bot.coro_send_message(event.conv, _("Deleted {} vote(s)").format(counter))
 
