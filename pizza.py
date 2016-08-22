@@ -3,8 +3,8 @@ import random
 from operator import add
 
 def _initialise(bot):
-    plugins.register_user_command(["vote","pizza"])
-    plugins.register_admin_command(["resetvote"])
+    plugins.register_user_command(["vote", "pizza"])
+    plugins.register_admin_command(["resetvotes"])
 
 
 indexToDay = {0:"Monday",
@@ -26,7 +26,7 @@ def pizza(bot, event, *args):
     votes = [0] * 5
     mvotes = bot.memory.get_by_path(["pizzavotes"])  # grab all votes
     for user_id in mvotes:
-        vote = votes[user_id]
+        vote = mvotes[user_id]
         votes = map(add, votes, vote)
 
     indices = [i for i, x in enumerate(votes) if x == max(votes)]
@@ -39,7 +39,7 @@ def initMemory(bot):
         bot.memory.set_by_path(["pizzavotes"], {})
         bot.memory.save()
 
-def resetvote(bot, event, *args):
+def resetvotes(bot, event, *args):
     initMemory(bot)
 
     counter = 0
