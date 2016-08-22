@@ -4,7 +4,7 @@ from operator import add
 
 def _initialise(bot):
     plugins.register_user_command(["vote", "pizza"])
-    plugins.register_admin_command(["resetvotes"])
+    plugins.register_admin_command(["resetvotes","dumpvotes"])
 
 
 indexToDay = {0:"Monday",
@@ -34,6 +34,14 @@ def pizza(bot, event, *args):
     yield from bot.coro_send_message(event.conv, _("Pizzaday could be on {}").format(days))
     yield from bot.coro_send_message(event.conv, _("I recommend to eat pizza on {}").format(random.choice(days)))
 
+def dumpvotes(bot, event, *args):
+    initMemory(bot)
+
+    mvotes = bot.memory.get_by_path(["pizzavotes"])  # grab all votes
+    for user_id in mvotes:
+        vote = mvotes[user_id]
+        yield from bot.coro_send_message(event.conv, _("Vote for " + user_id + ": {}").format(",".join(vote)))
+
 def initMemory(bot):
     if not bot.memory.exists(["pizzavotes"]):
         bot.memory.set_by_path(["pizzavotes"], {})
@@ -61,8 +69,7 @@ def vote(bot, event, *args):
         vote = voteForPizza(bot, ",".join(args))
         bot.memory.set_by_path(["pizzavotes", event.user.id_.chat_id], vote)
         bot.memory.save()
-        #bot.user_memory_set(event.user.id_.chat_id, 'pizzavote', vote)
-        yield from bot.coro_send_message(event.conv, _("Thank you for voting."))
+        yield from bot.coro_send_message(event.conv, _("Thank you for voting ({})").format(vote))
     except ValueError:
         yield from bot.coro_send_message(event.conv, _("Error: Do you even syntax."))
 
