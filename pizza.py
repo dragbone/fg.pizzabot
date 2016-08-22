@@ -24,11 +24,10 @@ def pizza(bot, event, *args):
     initMemory(bot)
 
     votes = [0] * 5
-    if bot.memory.exists(["pizzavotes"]):  # verify key exists
-        votes = bot.memory.get_by_path(["pizzavotes"])  # grab all votes
-        for user_id in votes:
-            vote = votes[user_id]
-            votes = map(add, votes, vote)
+    mvotes = bot.memory.get_by_path(["pizzavotes"])  # grab all votes
+    for user_id in mvotes:
+        vote = votes[user_id]
+        votes = map(add, votes, vote)
 
     indices = [i for i, x in enumerate(votes) if x == max(votes)]
     days = map(lambda x:indexToDay[x], indices)
