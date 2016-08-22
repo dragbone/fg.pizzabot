@@ -53,7 +53,7 @@ def resetvotes(bot, event, *args):
 
     counter = 0
     votes = bot.memory.get_by_path(["pizzavotes"])  # grab all votes
-    for user_id in votes:
+    for user_id in votes.keys():
         bot.memory.pop_by_path(["pizzavotes", user_id])
         counter += 1
     bot.memory.save()
