@@ -21,6 +21,8 @@ dayToIndex = {"mo":0,
               }
 
 def pizza(bot, event, *args):
+    initMemory(bot)
+
     votes = [0] * 5
     if bot.memory.exists(["pizzavotes"]):  # verify key exists
         votes = bot.memory.get_by_path(["pizzavotes"])  # grab all votes
@@ -33,17 +35,25 @@ def pizza(bot, event, *args):
     yield from bot.coro_send_message(event.conv, _("Pizzaday could be on {}").format(days))
     yield from bot.coro_send_message(event.conv, _("I recommend to eat pizza on {}").format(random.choice(days)))
 
+def initMemory(bot):
+    if not bot.memory.exists(["pizzavotes"]):
+        bot.memory.set_by_path(["pizzavotes"], {})
+        bot.memory.save()
+
 def resetvote(bot, event, *args):
+    initMemory(bot)
+
     counter = 0
-    if bot.memory.exists(["pizzavotes"]):  # verify key exists
-        votes = bot.memory.get_by_path(["pizzavotes"])  # grab all votes
-        for user_id in votes:
-            bot.memory.pop_by_path(["pizzavotes", user_id])
-            counter += 1
+    votes = bot.memory.get_by_path(["pizzavotes"])  # grab all votes
+    for user_id in votes:
+        bot.memory.pop_by_path(["pizzavotes", user_id])
+        counter += 1
     bot.memory.save()
     yield from bot.coro_send_message(event.conv, _("Deleted {} vote(s)").format(counter))
 
 def vote(bot, event, *args):
+    initMemory(bot)
+
     if not args:
         yield from bot.coro_send_message(event.conv, _("Usage: /bot vote <i>Mon-Wed,Fri</i>"))
         return
@@ -52,7 +62,7 @@ def vote(bot, event, *args):
         vote = voteForPizza(bot, ",".join(args))
         bot.memory.set_by_path(["pizzavotes", event.user.id_.chat_id], vote)
         bot.memory.save()
-        """bot.user_memory_set(event.user.id_.chat_id, 'pizzavote', vote)"""
+        #bot.user_memory_set(event.user.id_.chat_id, 'pizzavote', vote)
         yield from bot.coro_send_message(event.conv, _("Thank you for voting."))
     except ValueError:
         yield from bot.coro_send_message(event.conv, _("Error: Do you even syntax."))
