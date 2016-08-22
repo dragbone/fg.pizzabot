@@ -46,16 +46,17 @@ def vote(bot, event, *args):
         yield from bot.coro_send_message(event.conv, _("Error: Do you even syntax."))
 
 
-def voteForPizza(bot, input):
-    groups = input.lower().split(",")
-    days = map(lambda x:x.split("-"),groups)
-    ranges = map(lambda x:map(lambda y:dayToIndex[y[:2]],x),days)
+def voteForPizza(bot, inp):
+    groups = inp.lower().split(",")
+    days = map(lambda x:x.split("-"), groups)
+    ranges = map(lambda x:map(lambda y:dayToIndex[y[:2]], x), days)
 
-    for r in ranges:
+    for ri in ranges:
+        r = list(ri)
         if len(r) == 1:
             bot.votes[r[0]] += 1
         elif len(r) == 2:
-            for d in range(r[0],r[1]+1):
+            for d in range(r[0], r[1] + 1):
                 bot.votes[d] += 1
         else:
             raise ValueError("urgh")
