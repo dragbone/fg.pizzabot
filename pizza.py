@@ -30,7 +30,7 @@ def pizza(bot, event, *args):
         votes = map(add, votes, vote)
 
     indices = [i for i, x in enumerate(votes) if x == max(votes)]
-    days = map(lambda x:indexToDay[x], indices)
+    days = list(map(lambda x:indexToDay[x], indices))
     yield from bot.coro_send_message(event.conv, _("Pizzaday could be on {}").format(days))
     yield from bot.coro_send_message(event.conv, _("I recommend to eat pizza on {}").format(random.choice(days)))
 
