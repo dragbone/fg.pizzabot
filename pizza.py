@@ -65,7 +65,7 @@ def vote(bot, event, *args):
         yield from bot.coro_send_message(event.conv, _("Usage: /bot vote <i>Mon-Wed,Fri</i>\n/bot vote {}"))
         return
 
-    if len(args) == 0 and args[0] in noVote:
+    if len(args) == 1 and args[0] in noVote:
         bot.memory.set_by_path(["pizzavotes", event.user.id_.chat_id], [0] * 5)
         bot.memory.save()
         yield from bot.coro_send_message(event.conv, _("No pizza for you, sucker."))
