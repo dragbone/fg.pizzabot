@@ -21,6 +21,8 @@ dayToIndex = {"mo":0,
 
 validDays = [0,1,2,3,4]
 
+noVote = ["none", "null", "{}", "()", "nada", "never"]
+
 def pizza(bot, event, *args):
     initMemory(bot)
 
@@ -60,7 +62,13 @@ def vote(bot, event, *args):
     initMemory(bot)
 
     if not args:
-        yield from bot.coro_send_message(event.conv, _("Usage: /bot vote <i>Mon-Wed,Fri</i>"))
+        yield from bot.coro_send_message(event.conv, _("Usage: /bot vote <i>Mon-Wed,Fri</i>\n/bot vote {}"))
+        return
+
+    if len(args) == 0 and args[0] in noVote:
+        bot.memory.set_by_path(["pizzavotes", event.user.id_.chat_id], [0] * 5)
+        bot.memory.save()
+        yield from bot.coro_send_message(event.conv, _("No pizza for you, sucker."))
         return
 
     try:
@@ -68,8 +76,8 @@ def vote(bot, event, *args):
         bot.memory.set_by_path(["pizzavotes", event.user.id_.chat_id], vote)
         bot.memory.save()
         yield from bot.coro_send_message(event.conv, _("Thank you for voting ({})").format(vote))
-    except ValueError:
-        yield from bot.coro_send_message(event.conv, _("Error: Do you even syntax?!"))
+    except Exception as ex:
+        yield from bot.coro_send_message(event.conv, _("Error: Do you even syntax?! " + ex))
 
 def voteForPizza(bot, inp):
     groups = inp.lower().split(",")
@@ -84,7 +92,7 @@ def voteForPizza(bot, inp):
             for d in range(r[0], r[1] + 1):
                 vote[d] += 1
         else:
-            raise ValueError("Do you even syntax?!")
+            raise ValueError("You suck.")
     #Clean
     vote = list(map(lambda x:min(x, 1), vote))
     return vote
