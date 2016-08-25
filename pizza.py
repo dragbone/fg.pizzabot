@@ -48,10 +48,9 @@ def initMemory(bot):
 def resetvotes(bot, event, *args):
     initMemory(bot)
 
-    counter = 0
     bot.memory.set_by_path([MEM_NAME], {})
     bot.memory.save()
-    yield from bot.coro_send_message(event.conv, _("Deleted {} vote(s)").format(counter))
+    yield from bot.coro_send_message(event.conv, _("Deleted all votes"))
 
 def vote(bot, event, *args):
     initMemory(bot)
