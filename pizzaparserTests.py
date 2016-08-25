@@ -39,6 +39,19 @@ class ParserTests(unittest.TestCase):
         self.assertEqual([1, 1, 1, 1, 1], pizzaparser.parsePizzaVote(["mo", "di", "mi", "do", "fr"]))
         self.assertEqual([1, 1, 1, 1, 1], pizzaparser.parsePizzaVote(["Mo", "Di", "Mi", "Do", "Fr"]))
 
+    def test_stable_random(self):
+        day = pizzaparser.choosePizzaDay(range(0,5))
+
+        for i in range(0,5):
+            # Remove day i from options, selected day must no change except if i == selected_day
+            days = list(range(0,5))
+            days.remove(i)
+            nDay = pizzaparser.choosePizzaDay(days)
+            if i != day:
+                self.assertEqual(day, nDay)
+            else:
+                self.assertNotEqual(day, nDay)
+
 class IssueTests(unittest.TestCase):
     def test_issue1_empty_vote(self):
         self.assertEqual([0, 0, 0, 0, 0], pizzaparser.parsePizzaVote(["null"]))
@@ -46,6 +59,11 @@ class IssueTests(unittest.TestCase):
 
     def test_issue2_ifneedbe(self):
         self.assertEqual([1, 0.5, 1, 0.5, 0.5], pizzaparser.parsePizzaVote(["mo,", "(di),", "mi,", "(do-fr)"]))
+
+    def test_issue3_deterministic_random(self):
+        firstDay = pizzaparser.choosePizzaDay(range(0, 5))
+        for i in range(0,100):
+            self.assertEqual(firstDay, pizzaparser.choosePizzaDay(range(0, 5)))
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,5 +1,7 @@
 """ Doesn't actually parse pizzas """
 import re
+import random
+import datetime
 from operator import add
 
 noVote = ["none", "null", "{}", "()", "nada", "never", ":-(", ":'-("]
@@ -47,3 +49,11 @@ def parsePizzaVote(args):
     # Clean
     vote = list(map(lambda x: min(x, 1.0), vote))
     return vote
+
+def choosePizzaDay(days):
+    # Recommend a random day - recommended day does not change with additional votes,
+    #   as long as it is one of the most often voted ones
+    random.seed(datetime.datetime.now().isocalendar()[1])
+    dayPriorities = list(range(0, 5))
+    random.shuffle(dayPriorities)
+    return max(days, key=lambda x: dayPriorities[x])

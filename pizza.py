@@ -1,5 +1,4 @@
 import plugins
-import random
 import pizzaparser
 from operator import add
 
@@ -29,7 +28,9 @@ def pizza(bot, event, *args):
     indices = [i for i, x in enumerate(votes) if x == max(votes)]
     days = list(map(lambda x:indexToDay[x], indices))
     yield from bot.coro_send_message(event.conv, _("Pizzaday could be on {}").format(days))
-    yield from bot.coro_send_message(event.conv, _("I recommend to eat pizza on {}").format(random.choice(days)))
+
+    recommendedDay = indexToDay[pizzaparser.choosePizzaDay(indices)]
+    yield from bot.coro_send_message(event.conv, _("I recommend to eat pizza on {}").format(recommendedDay))
 
 def dumpvotes(bot, event, *args):
     initMemory(bot)
