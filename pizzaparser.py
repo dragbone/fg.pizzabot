@@ -1,4 +1,4 @@
-""" Doesn't actually parse pizzas """
+# Doesn't actually parse pizzas
 import re
 import random
 import datetime
