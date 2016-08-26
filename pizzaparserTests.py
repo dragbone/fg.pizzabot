@@ -43,7 +43,7 @@ class ParserTests(unittest.TestCase):
         day = pizza.choosePizzaDay(range(0,5))
 
         for i in range(0,5):
-            # Remove day i from options, selected day must no change except if i == selected_day
+            # Remove day i from options, selected day must not change except if i == selected_day
             days = list(range(0,5))
             days.remove(i)
             nDay = pizza.choosePizzaDay(days)
@@ -51,6 +51,15 @@ class ParserTests(unittest.TestCase):
                 self.assertEqual(day, nDay)
             else:
                 self.assertNotEqual(day, nDay)
+
+    def test_parse_fail(self):
+        self.assertRaises(Exception, pizza.parsePizzaVote, ["xu"])
+        self.assertRaises(Exception, pizza.parsePizzaVote, ["mo-tu-fr"])
+        self.assertRaises(Exception, pizza.parsePizzaVote, ["123"])
+        self.assertRaises(Exception, pizza.parsePizzaVote, ["[0,2]"])
+        self.assertRaises(Exception, pizza.parsePizzaVote, ["mo","null"])
+        self.assertRaises(Exception, pizza.parsePizzaVote, ["(mo)","((wed))"])
+
 
 class IssueTests(unittest.TestCase):
     def test_issue1_empty_vote(self):
