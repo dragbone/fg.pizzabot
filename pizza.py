@@ -24,7 +24,7 @@ def pizza(bot, event, *args):
     days = list(map(lambda x: indexToDay[x], indices))
 
     recommendedDay = choosePizzaDay(indices)
-    message = "Pizzaday could be on " + days + "\n"
+    message = "Pizzaday could be on " + str(days) + "\n"
     message += "I recommend to eat pizza on " + indexToDay[recommendedDay] + "\n"
     message += ", ".join(canAttend[recommendedDay]) + " will be attending"
     yield from bot.coro_send_message(event.conv, message)
