@@ -22,11 +22,12 @@ def pizza(bot, event, *args):
 
     indices = [i for i, x in enumerate(votes) if x == max(votes)]
     days = list(map(lambda x: indexToDay[x], indices))
-    yield from bot.coro_send_message(event.conv, _("Pizzaday could be on {}").format(days))
 
     recommendedDay = choosePizzaDay(indices)
-    yield from bot.coro_send_message(event.conv, _("I recommend to eat pizza on {}").format(indexToDay[recommendedDay]))
-    yield from bot.coro_send_message(event.conv, _("{} will be attending").format(", ".join(canAttend[recommendedDay])))
+    message = "Pizzaday could be on " + days + "\n"
+    message += "I recommend to eat pizza on " + indexToDay[recommendedDay] + "\n"
+    message += ", ".join(canAttend[recommendedDay]) + " will be attending"
+    yield from bot.coro_send_message(event.conv, message)
 
 
 def countVotes(mvotes):
