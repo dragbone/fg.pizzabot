@@ -44,6 +44,11 @@ def countVotes(mvotes):
     return (votes, canAttend)
 
 
+def totalVotes(mvotes):
+    votes = countVotes(mvotes)[0]
+    return sum(votes)
+
+
 def dumpvotes(bot, event, *args):
     mvotes = getVotes(bot)
     for user_id in mvotes:
@@ -65,6 +70,9 @@ def vote(bot, event, *args):
         vote = parsePizzaVote(args)
         storeVote(bot, event.user, vote)
         yield from bot.coro_send_message(event.conv, _("Thank you for voting ({})").format(vote))
+
+        if totalVotes(getVotes(bot)) >= 3:
+            yield from pizza(bot, event)
     except Exception as ex:
         yield from bot.coro_send_message(event.conv, _("Error: Do you even syntax?! " + ex))
 
