@@ -72,7 +72,7 @@ def vote(bot, event, *args):
         yield from bot.coro_send_message(event.conv, _("Thank you for voting ({})").format(vote))
 
         if totalVotes(getVotes(bot)) >= 3:
-            yield from pizza(bot, event, args)
+            yield from pizza(bot, event)
     except Exception as ex:
         yield from bot.coro_send_message(event.conv, _("Error: Do you even syntax?! " + ex))
 
